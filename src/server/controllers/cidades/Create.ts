@@ -1,10 +1,10 @@
-import { Request, RequestHandler, Response, query } from "express";
-import { StatusCodes } from "http-status-codes";
+import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 
-import { validation } from "../../shared/middlewares";
-import { ICidade } from "../../database/models";
-import { CidadesProvider } from "../../database/providers/cidades";
+import { CidadesProvider } from '../../database/providers/cidades';
+import { validation } from '../../shared/middlewares';
+import { ICidade } from '../../database/models';
 
 
 interface IBodyProps extends Omit<ICidade, 'id'> { }
@@ -16,17 +16,15 @@ export const createValidation = validation((getSchema) => ({
 }));
 
 export const create = async (req: Request<{}, {}, ICidade>, res: Response) => {
+  const result = await CidadesProvider.create(req.body);
 
-  const result = await CidadesProvider.create(req.body)
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {
         default: result.message
       }
-    })
+    });
   }
 
-
-
   return res.status(StatusCodes.CREATED).json(result);
-}
+};

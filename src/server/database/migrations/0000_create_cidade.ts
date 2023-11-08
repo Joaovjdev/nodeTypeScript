@@ -1,11 +1,11 @@
 import { Knex } from 'knex';
-import { ETbaleNames } from '../ETableNames';
+import { ETableNames } from '../ETableNames';
 
 
 export async function up(knex: Knex) {
   return knex
   .schema
-  .createTable(ETbaleNames.cidade, table => {
+  .createTable(ETableNames.cidade, table => {
     table.bigIncrements('id').primary().index();
     table.string('nome', 150).checkLength('<=', 150).index().notNullable();
 
@@ -13,7 +13,7 @@ export async function up(knex: Knex) {
 
   })
   .then(() => {
-    console.log(`Create table ${ETbaleNames.cidade}`)
+    console.log(`Create table ${ETableNames.cidade}`)
   });
     
 }
@@ -21,9 +21,9 @@ export async function up(knex: Knex) {
 
 export async function down(knex: Knex) {
   return knex.schema
-  .dropTable(ETbaleNames.cidade)
+  .dropTable(ETableNames.cidade)
   .then(() => {
-    console.log(`Dropped table ${ETbaleNames.cidade}`)
+    console.log(`Dropped table ${ETableNames.cidade}`)
   });
 
 }

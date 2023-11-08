@@ -1,5 +1,5 @@
 
 
-export enum ETbaleNames {
+export enum ETableNames {
   cidade = 'cidade'
 };
