@@ -3,173 +3,173 @@ import { StatusCodes } from 'http-status-codes';
 import { testServer } from '../jest.setup';
 
 
-describe('Pessoas - Create', () => {
+describe('People - Create', () => {
   let accessToken = '';
   beforeAll(async () => {
-    const email = 'create-pessoas@gmail.com';
-    await testServer.post('/cadastrar').send({ email, senha: '123456', nome: 'Teste' });
-    const signInRes = await testServer.post('/entrar').send({ email, senha: '123456' });
+    const email = 'create-people@gmail.com';
+    await testServer.post('/register').send({ email, password: '123456', name: 'Teste' });
+    const signInRes = await testServer.post('/login').send({ email, password: '123456' });
 
     accessToken = signInRes.body.accessToken;
   });
 
-  let cidadeId: number | undefined = undefined;
+  let cityId: number | undefined = undefined;
   beforeAll(async () => {
-    const resCidade = await testServer
-      .post('/cidades')
+    const resCity = await testServer
+      .post('/cities')
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Teste' });
+      .send({ name: 'Test' });
 
-    cidadeId = resCidade.body;
+    cityId = resCity.body;
   });
 
 
-  it('Criar sem usar token de autenticação', async () => {
+  it('Create without using authentication token', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .send({
-        cidadeId: 1,
+        cityId: 1,
         email: 'juca@gmail.com',
-        nomeCompleto: 'Juca silva',
+        name: 'Juca silva',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
     expect(res1.body).toHaveProperty('errors.default');
   });
-  it('Cria registro', async () => {
+  it('Create record', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
+        cityId,
         email: 'juca@gmail.com',
-        nomeCompleto: 'Juca silva',
+        name: 'Juca silva',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
     expect(typeof res1.body).toEqual('number');
   });
-  it('Cadastra registro 2', async () => {
+  it('Create record 2', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
-        nomeCompleto: 'Juca silva',
+        cityId,
+        name: 'Juca silva',
         email: 'juca2@gmail.com',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
     expect(typeof res1.body).toEqual('number');
   });
-  it('Tenta criar registro com email duplicado', async () => {
+  it('Try to create a record with a duplicate email', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
-        nomeCompleto: 'Juca silva',
+        cityId,
+        name: 'Juca silva',
         email: 'jucaduplicado@gmail.com',
       });
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
     expect(typeof res1.body).toEqual('number');
 
     const res2 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
+        cityId,
         email: 'jucaduplicado@gmail.com',
-        nomeCompleto: 'duplicado',
+        name: 'duplicado',
       });
     expect(res2.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
     expect(res2.body).toHaveProperty('errors.default');
   });
-  it('Tenta criar registro com nomeCompleto muito curto', async () => {
+  it('Trying to create a record with a very short name', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
+        cityId,
         email: 'juca@gmail.com',
-        nomeCompleto: 'Ju',
+        name: 'Ju',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
-    expect(res1.body).toHaveProperty('errors.body.nomeCompleto');
+    expect(res1.body).toHaveProperty('errors.body.name');
   });
-  it('Tenta criar registro sem nomeCompleto', async () => {
+  it('Try to create a record without a name', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
+        cityId,
         email: 'juca@gmail.com',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
-    expect(res1.body).toHaveProperty('errors.body.nomeCompleto');
+    expect(res1.body).toHaveProperty('errors.body.name');
   });
-  it('Tenta criar registro sem email', async () => {
+  it('Try creating registration without email', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
-        nomeCompleto: 'Juca da Silva',
+        cityId,
+        name: 'Juca da Silva',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
     expect(res1.body).toHaveProperty('errors.body.email');
   });
-  it('Tenta criar registro com email inválido', async () => {
+  it('Try creating registration with invalid email', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
+        cityId,
         email: 'juca gmail.com',
-        nomeCompleto: 'Juca da Silva',
+        name: 'Juca da Silva',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
     expect(res1.body).toHaveProperty('errors.body.email');
   });
-  it('Tenta criar registro sem cidadeId', async () => {
+  it('Try to create a record without cityId', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
         email: 'juca@gmail.com',
-        nomeCompleto: 'Juca da Silva',
+        name: 'Juca da Silva',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
-    expect(res1.body).toHaveProperty('errors.body.cidadeId');
+    expect(res1.body).toHaveProperty('errors.body.cityId');
   });
-  it('Tenta criar registro com cidadeId inválido', async () => {
+  it('Attempts to create record with invalid cityId', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId: 'teste',
+        cityId: 'test',
         email: 'juca@gmail.com',
-        nomeCompleto: 'Juca da Silva',
+        name: 'Juca da Silva',
       });
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
-    expect(res1.body).toHaveProperty('errors.body.cidadeId');
+    expect(res1.body).toHaveProperty('errors.body.cityId');
   });
-  it('Tenta criar registro sem enviar nenhuma propriedade', async () => {
+  it('Try creating record without sending any properties', async () => {
 
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({});
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
     expect(res1.body).toHaveProperty('errors.body.email');
-    expect(res1.body).toHaveProperty('errors.body.cidadeId');
-    expect(res1.body).toHaveProperty('errors.body.nomeCompleto');
+    expect(res1.body).toHaveProperty('errors.body.cityId');
+    expect(res1.body).toHaveProperty('errors.body.name');
   });
 });

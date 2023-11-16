@@ -2,22 +2,25 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 
-import { CidadesProvider } from '../../database/providers/cidades';
+
 import { validation } from '../../shared/middlewares';
-import { ICidade } from '../../database/models';
+import { IPeople } from '../../database/models';
+import { PeopleProvider } from '../../database/providers/cidades/people';
 
 
 interface IParamProps {
   id?: number;
 }
 
-interface IBodyProps extends Omit<ICidade, 'id'> { }
+interface IBodyProps extends Omit<IPeople, 'id'> { }
 
-export const updateByIdValidation = validation(getSchema => ({
-  body: getSchema<IBodyProps>(yup.object().shape({
-    nome: yup.string().required().min(3),
+export const updateByIdValidation = validation(get => ({
+  body: get<IBodyProps>(yup.object().shape({
+    email: yup.string().required().email(),
+    cityId: yup.number().integer().required(),
+    name: yup.string().required().min(3),
   })),
-  params: getSchema<IParamProps>(yup.object().shape({
+  params: get<IParamProps>(yup.object().shape({
     id: yup.number().integer().required().moreThan(0),
   })),
 }));
@@ -26,12 +29,12 @@ export const updateById = async (req: Request<IParamProps, {}, IBodyProps>, res:
   if (!req.params.id) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {
-        default: 'O parâmetro "id" precisa ser informado.'
+        default: 'The "id" parameter must be provided.'
       }
     });
   }
 
-  const result = await CidadesProvider.updateById(req.params.id, req.body);
+  const result = await PeopleProvider.updateById(req.params.id, req.body);
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { CidadesController, PessoasController, UsuariosController } from './../controllers';
+import { CitiesController, PeopleController, UsersController } from './../controllers';
 import { ensureAuthenticated } from '../shared/middlewares';
 
 
@@ -13,20 +13,20 @@ router.get('/', (_, res) => {
   return res.send('Olá, DEV!');
 });
 
-router.get('/cidades', ensureAuthenticated, CidadesController.getAllValidation, CidadesController.getAll);
-router.post('/cidades', ensureAuthenticated, CidadesController.createValidation, CidadesController.create);
-router.get('/cidades/:id', ensureAuthenticated, CidadesController.getByIdValidation, CidadesController.getById);
-router.put('/cidades/:id', ensureAuthenticated, CidadesController.updateByIdValidation, CidadesController.updateById);
-router.delete('/cidades/:id', ensureAuthenticated, CidadesController.deleteByIdValidation, CidadesController.deleteById);
+router.get('/Cities', ensureAuthenticated, CitiesController.getAllValidation, CitiesController.getAll);
+router.post('/Cities', ensureAuthenticated, CitiesController.createValidation, CitiesController.create);
+router.get('/Cities/:id', ensureAuthenticated, CitiesController.getByIdValidation, CitiesController.getById);
+router.put('/Cities/:id', ensureAuthenticated, CitiesController.updateByIdValidation, CitiesController.updateById);
+router.delete('/Cities/:id', ensureAuthenticated, CitiesController.deleteByIdValidation, CitiesController.deleteById);
 
-router.get('/pessoas', ensureAuthenticated, PessoasController.getAllValidation, PessoasController.getAll);
-router.post('/pessoas', ensureAuthenticated, PessoasController.createValidation, PessoasController.create);
-router.get('/pessoas/:id', ensureAuthenticated, PessoasController.getByIdValidation, PessoasController.getById);
-router.put('/pessoas/:id', ensureAuthenticated, PessoasController.updateByIdValidation, PessoasController.updateById);
-router.delete('/pessoas/:id', ensureAuthenticated, PessoasController.deleteByIdValidation, PessoasController.deleteById);
+router.get('/people', ensureAuthenticated, PeopleController.getAllValidation, PeopleController.getAll);
+router.post('/people', ensureAuthenticated, PeopleController.createValidation, PeopleController.create);
+router.get('/people/:id', ensureAuthenticated, PeopleController.getByIdValidation, PeopleController.getById);
+router.put('/people/:id', ensureAuthenticated, PeopleController.updateByIdValidation, PeopleController.updateById);
+router.delete('/people/:id', ensureAuthenticated, PeopleController.deleteByIdValidation, PeopleController.deleteById);
 
-router.post('/entrar', UsuariosController.signInValidation, UsuariosController.signIn);
-router.post('/cadastrar', UsuariosController.signUpValidation, UsuariosController.signUp);
+router.post('/login', UsersController.signInValidation, UsersController.signIn);
+router.post('/register', UsersController.signUpValidation, UsersController.signUp);
 
 
 

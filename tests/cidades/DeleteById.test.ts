@@ -3,44 +3,44 @@ import { StatusCodes } from 'http-status-codes';
 import { testServer } from '../jest.setup';
 
 
-describe('Cidades - DeleteById', () => {
+describe('Cities - DeleteById', () => {
   let accessToken = '';
   beforeAll(async () => {
     const email = 'deletebuid-cidades@gmail.com';
-    await testServer.post('/cadastrar').send({ email, senha: '123456', nome: 'Teste' });
-    const signInRes = await testServer.post('/entrar').send({ email, senha: '123456' });
+    await testServer.post('/register').send({ email, password: '123456', name: 'Teste' });
+    const signInRes = await testServer.post('/login').send({ email, password: '123456' });
 
     accessToken = signInRes.body.accessToken;
   });
 
 
-  it('Tenta apagar registro sem usar token de autenticação', async () => {
+  it('Try to cancel registration without using authentication token', async () => {
     const res1 = await testServer
-      .delete('/cidades/1')
+      .delete('/cities/1')
       .send();
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
     expect(res1.body).toHaveProperty('errors.default');
   });
-  it('Apaga registro', async () => {
+  it('Delete record', async () => {
 
     const res1 = await testServer
-      .post('/cidades')
+      .post('/cities')
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Caxias do sul' });
+      .send({ name: 'Caxias do sul' });
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
-    const resApagada = await testServer
-      .delete(`/cidades/${res1.body}`)
+    const resOff = await testServer
+      .delete(`/cities/${res1.body}`)
       .set({ Authorization: `Bearer ${accessToken}` })
       .send();
 
-    expect(resApagada.statusCode).toEqual(StatusCodes.NO_CONTENT);
+    expect(resOff.statusCode).toEqual(StatusCodes.NO_CONTENT);
   });
-  it('Tenta apagar registro que não existe', async () => {
+  it('Try to delete a record that doesnt exist', async () => {
 
     const res1 = await testServer
-      .delete('/cidades/99999')
+      .delete('/cities/99999')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send();
 

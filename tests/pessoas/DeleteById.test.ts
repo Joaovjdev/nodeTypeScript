@@ -3,54 +3,54 @@ import { StatusCodes } from 'http-status-codes';
 import { testServer } from '../jest.setup';
 
 
-describe('Pessoas - DeleteById', () => {
+describe('People - DeleteById', () => {
   let accessToken = '';
   beforeAll(async () => {
-    const email = 'delete-pessoas@gmail.com';
-    await testServer.post('/cadastrar').send({ email, senha: '123456', nome: 'Teste' });
-    const signInRes = await testServer.post('/entrar').send({ email, senha: '123456' });
+    const email = 'delete-people@gmail.com';
+    await testServer.post('/register').send({ email, password: '123456', name: 'Teste' });
+    const signInRes = await testServer.post('/login').send({ email, password: '123456' });
 
     accessToken = signInRes.body.accessToken;
   });
 
-  let cidadeId: number | undefined = undefined;
+  let cityId: number | undefined = undefined;
   beforeAll(async () => {
-    const resCidade = await testServer
-      .post('/cidades')
+    const resCity = await testServer
+      .post('/cities')
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Teste' });
+      .send({ name: 'Test' });
 
-    cidadeId = resCidade.body;
+    cityId = resCity.body;
   });
 
-  it('Tenta apagar registro sem usar token de autenticação', async () => {
+  it('Try to cancel registration without using authentication token', async () => {
     const res1 = await testServer
-      .delete('/pessoas/1')
+      .delete('/people/1')
       .send();
 
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
     expect(res1.body).toHaveProperty('errors.default');
   });
-  it('Apaga registro', async () => {
+  it('Delete record', async () => {
     const res1 = await testServer
-      .post('/pessoas')
+      .post('/people')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send({
-        cidadeId,
+        cityId,
         email: 'jucadelete@gmail.com',
-        nomeCompleto: 'Juca silva',
+        name: 'Juca silva',
       });
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
     const resApagada = await testServer
-      .delete(`/pessoas/${res1.body}`)
+      .delete(`/people/${res1.body}`)
       .set({ Authorization: `Bearer ${accessToken}` })
       .send();
     expect(resApagada.statusCode).toEqual(StatusCodes.NO_CONTENT);
   });
-  it('Tenta apagar registro que não existe', async () => {
+  it('Try to delete a record that doesnt exist', async () => {
     const res1 = await testServer
-      .delete('/pessoas/99999')
+      .delete('/people/99999')
       .set({ Authorization: `Bearer ${accessToken}` })
       .send();
 

@@ -5,15 +5,15 @@ import { ETableNames } from '../ETableNames';
 export async function up(knex: Knex) {
   return knex
   .schema
-  .createTable(ETableNames.cidade, table => {
+  .createTable(ETableNames.city, table => {
     table.bigIncrements('id').primary().index();
-    table.string('nome', 150).checkLength('<=', 150).index().notNullable();
+    table.string('name', 150).checkLength('<=', 150).index().notNullable();
 
-    table.comment('Tabela para armazenar cidades do sistema');
+    table.comment('Table for storing system cities');
 
   })
   .then(() => {
-    console.log(`Create table ${ETableNames.cidade}`)
+    console.log(`Create table ${ETableNames.city}`)
   });
     
 }
@@ -21,9 +21,9 @@ export async function up(knex: Knex) {
 
 export async function down(knex: Knex) {
   return knex.schema
-  .dropTable(ETableNames.cidade)
+  .dropTable(ETableNames.city)
   .then(() => {
-    console.log(`Dropped table ${ETableNames.cidade}`)
+    console.log(`Dropped table ${ETableNames.city}`)
   });
 
 }

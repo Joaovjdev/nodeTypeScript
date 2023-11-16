@@ -4,28 +4,28 @@ import * as yup from 'yup';
 
 
 import { validation } from '../../shared/middlewares';
-import { PessoasProvider } from '../../database/providers/cidades/pessoas';
+import { PeopleProvider } from '../../database/providers/cidades/people';
 
 
 interface IParamProps {
   id?: number;
 }
-export const deleteByIdValidation = validation(get => ({
+export const getByIdValidation = validation(get => ({
   params: get<IParamProps>(yup.object().shape({
     id: yup.number().integer().required().moreThan(0),
   })),
 }));
 
-export const deleteById = async (req: Request<IParamProps>, res: Response) => {
+export const getById = async (req: Request<IParamProps>, res: Response) => {
   if (!req.params.id) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       errors: {
-        default: 'O parâmetro "id" precisa ser informado.'
+        default: 'The "id" parameter must be provided.'
       }
     });
   }
 
-  const result = await PessoasProvider.deleteById(req.params.id);
+  const result = await PeopleProvider.getById(req.params.id);
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errors: {
@@ -34,5 +34,5 @@ export const deleteById = async (req: Request<IParamProps>, res: Response) => {
     });
   }
 
-  return res.status(StatusCodes.NO_CONTENT).send();
+  return res.status(StatusCodes.OK).json(result);
 };

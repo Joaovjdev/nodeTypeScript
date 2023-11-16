@@ -3,39 +3,39 @@ import { StatusCodes } from 'http-status-codes';
 import { testServer } from '../jest.setup';
 
 
-describe('Cidades - Create', () => {
+describe('Cities - Create', () => {
   let accessToken = '';
   beforeAll(async () => {
-    const email = 'create-cidades@gmail.com';
-    await testServer.post('/cadastrar').send({ nome: 'Teste', email, senha: '123456' });
-    const signInRes = await testServer.post('/entrar').send({ email, senha: '123456' });
+    const email = 'create-cities@gmail.com';
+    await testServer.post('/register').send({ name: 'Test', email, password: '123456' });
+    const signInRes = await testServer.post('/login').send({ email, password: '123456' });
 
     accessToken = signInRes.body.accessToken;
   });
 
 
-  it('Tenta criar um registro sem token de acesso', async () => {
+  it('Attempts to create a record without an access token', async () => {
     const res1 = await testServer
-      .post('/cidades')
-      .send({ nome: 'Caxias do Sul' });
+      .post('/cities')
+      .send({ name: 'Caxias do Sul' });
 
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
     expect(res1.body).toHaveProperty('errors.default');
   });
-  it('Cria registro', async () => {
+  it('Create record', async () => {
     const res1 = await testServer
-      .post('/cidades')
+      .post('/cities')
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Caxias do Sul' });
+      .send({ name: 'Caxias do Sul' });
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
     expect(typeof res1.body).toEqual('number');
   });
-  it('Tenta criar um registro com nome muito curto', async () => {
+  it('Try creating a record with a very short name', async () => {
     const res1 = await testServer
-      .post('/cidades')
+      .post('/cities')
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Ca' });
+      .send({ name: 'Ca' });
 
     expect(res1.statusCode).toEqual(StatusCodes.BAD_REQUEST);
     expect(res1.body).toHaveProperty('errors.body.nome');

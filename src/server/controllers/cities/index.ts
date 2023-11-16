@@ -7,7 +7,7 @@ import * as deleteById from './DeleteById'
 
 
 
-export const CidadesController = {
+export const CitiesController = {
   ...deleteById,
   ...updateById,
   ...getById,

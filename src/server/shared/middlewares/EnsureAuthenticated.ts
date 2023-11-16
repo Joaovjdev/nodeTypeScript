@@ -10,7 +10,7 @@ export const ensureAuthenticated: RequestHandler = async (req, res, next) => {
   
   if (!authorization) {
     return res.status(StatusCodes.UNAUTHORIZED).json({
-      erros: {default:'Nao autenticado'}
+      erros: {default:'Not authenticated'}
     });
   };
 
@@ -18,22 +18,22 @@ export const ensureAuthenticated: RequestHandler = async (req, res, next) => {
 
   if (type !== 'Bearer') {
     return res.status(StatusCodes.UNAUTHORIZED).json({
-      erros: {default:'Nao autenticado'}
+      erros: {default:'Not authenticated'}
     });
   };
 
   const jwtData = JWTService.verify(token)
   if (jwtData === 'JWT_SECRET_NOT_FOUND') {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      erros: {default:'Erro ao verificar o token'}
+      erros: {default:'Error verifying token'}
     });
   } else if (jwtData === 'INVALID_TOKEN') {
     return res.status(StatusCodes.UNAUTHORIZED).json({
-      erros: {default:'Não autenticado'}
+      erros: {default:'Not authenticated'}
     });
   }
     console.log(jwtData);
-    req.headers.idUsuario = jwtData.uid.toString();
+    req.headers.idUser = jwtData.uid.toString();
     
     return next();
   }

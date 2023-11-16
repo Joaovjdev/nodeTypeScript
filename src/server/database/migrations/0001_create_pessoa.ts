@@ -5,24 +5,24 @@ import { ETableNames } from '../ETableNames';
 export async function up(knex: Knex) {
   return knex
   .schema
-  .createTable(ETableNames.pessoa, table => {
+  .createTable(ETableNames.person, table => {
     table.bigIncrements('id').primary().index();
-    table.string('nomeCompleto').index().notNullable();
+    table.string('name').index().notNullable();
     table.string('email').unique().notNullable();
 
-    table.bigInteger('cidadeId')
+    table.bigInteger('cityId')
     .index()
     .notNullable()
     .references('id')
-    .inTable(ETableNames.cidade)
+    .inTable(ETableNames.city)
     .onUpdate('CASCADE')
     .onDelete('RESTRICT');
 
-    table.comment('Tabela para armazenar pessoas do sistema');
+    table.comment('Table for storing system people');
 
   })
   .then(() => {
-    console.log(`Create table ${ETableNames.pessoa}`)
+    console.log(`Create table ${ETableNames.city}`)
   });
     
 }
@@ -30,9 +30,9 @@ export async function up(knex: Knex) {
 
 export async function down(knex: Knex) {
   return knex.schema
-  .dropTable(ETableNames.pessoa)
+  .dropTable(ETableNames.person)
   .then(() => {
-    console.log(`Dropped table ${ETableNames.pessoa}`)
+    console.log(`Dropped table ${ETableNames.person}`)
   });
 
 }

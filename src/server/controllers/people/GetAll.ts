@@ -4,7 +4,7 @@ import * as yup from 'yup';
 
 
 import { validation } from '../../shared/middlewares';
-import { PessoasProvider } from '../../database/providers/cidades/pessoas';
+import { PeopleProvider } from '../../database/providers/cidades/people';
 
 
 interface IQueryProps {
@@ -21,8 +21,8 @@ export const getAllValidation = validation(get => ({
 }));
 
 export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Response) => {
-  const result = await PessoasProvider.getAll(req.query.page || 1, req.query.limit || 7, req.query.filter || '');
-  const count = await PessoasProvider.count(req.query.filter);
+  const result = await PeopleProvider.getAll(req.query.page || 1, req.query.limit || 7, req.query.filter || '');
+  const count = await PeopleProvider.count(req.query.filter);
 
   if (result instanceof Error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({

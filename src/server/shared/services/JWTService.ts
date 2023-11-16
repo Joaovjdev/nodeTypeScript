@@ -1,20 +1,20 @@
 import * as jwt from 'jsonwebtoken'
 
 
-interface IJwtData {
+interface IJwtDate {
   uid: number;
 };
 
-const sign = (data: IJwtData): string | 'JWT_SECRET_NOT_FOUND' => {
+const sign = (date: IJwtDate): string | 'JWT_SECRET_NOT_FOUND' => {
 
   if (!process.env.JWT_SECRET) return 'JWT_SECRET_NOT_FOUND';
 
 
-  return jwt.sign(data, process.env.JWT_SECRET, { expiresIn: '24h' });
+  return jwt.sign(date, process.env.JWT_SECRET, { expiresIn: '24h' });
 
 };
 
-const verify = (token: string): IJwtData |  'JWT_SECRET_NOT_FOUND' | 'INVALID_TOKEN' => {
+const verify = (token: string): IJwtDate |  'JWT_SECRET_NOT_FOUND' | 'INVALID_TOKEN' => {
   if (!process.env.JWT_SECRET) return 'JWT_SECRET_NOT_FOUND';
 
   try {
@@ -23,7 +23,7 @@ const verify = (token: string): IJwtData |  'JWT_SECRET_NOT_FOUND' | 'INVALID_TO
       return 'INVALID_TOKEN';
     };
 
-    return decoded as IJwtData;
+    return decoded as IJwtDate;
     
   } catch (error) {
     return 'INVALID_TOKEN'

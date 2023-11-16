@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 
-import { CidadesProvider } from '../../database/providers/cidades';
+import { CitiesProvider } from '../../database/providers/cidades';
 import { validation } from '../../shared/middlewares';
 
 
@@ -22,8 +22,8 @@ export const getAllValidation = validation((getSchema) => ({
 }));
 
 export const getAll = async (req: Request<{}, {}, {}, IQueryProps>, res: Response) => {
-  const result = await CidadesProvider.getAll(req.query.page || 1, req.query.limit || 7, req.query.filter || '', Number(req.query.id));
-  const count = await CidadesProvider.count(req.query.filter);
+  const result = await CitiesProvider.getAll(req.query.page || 1, req.query.limit || 7, req.query.filter || '', Number(req.query.id));
+  const count = await CitiesProvider.count(req.query.filter);
 
 
   if (result instanceof Error) {

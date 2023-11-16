@@ -3,46 +3,46 @@ import { StatusCodes } from 'http-status-codes';
 import { testServer } from '../jest.setup';
 
 
-describe('Cidades - UpdateById', () => {
+describe('Cities - UpdateById', () => {
   let accessToken = '';
   beforeAll(async () => {
-    const email = 'updatebyid-cidades@gmail.com';
-    await testServer.post('/cadastrar').send({ email, senha: '123456', nome: 'Teste' });
-    const signInRes = await testServer.post('/entrar').send({ email, senha: '123456' });
+    const email = 'updatebyid-cities@gmail.com';
+    await testServer.post('/register').send({ email, password: '123456', name: 'Test' });
+    const signInRes = await testServer.post('/login').send({ email, password: '123456' });
 
     accessToken = signInRes.body.accessToken;
   });
 
 
-  it('Tenta atualizar sem usar token de autenticação', async () => {
+  it('Try updating without using an authentication token', async () => {
     const res1 = await testServer
-      .put('/cidades/1')
-      .send({ nome: 'Teste' });
+      .put('/cities/1')
+      .send({ name: 'Test' });
     expect(res1.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
     expect(res1.body).toHaveProperty('errors.default');
   });
-  it('Atualiza registro', async () => {
+  it('Update record', async () => {
 
     const res1 = await testServer
-      .post('/cidades')
+      .post('/cities')
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Caxias do sul' });
+      .send({ name: 'Caxias do sul' });
 
     expect(res1.statusCode).toEqual(StatusCodes.CREATED);
 
     const resAtualizada = await testServer
-      .put(`/cidades/${res1.body}`)
+      .put(`/cities/${res1.body}`)
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Caxias' });
+      .send({ name: 'Caxias' });
 
     expect(resAtualizada.statusCode).toEqual(StatusCodes.NO_CONTENT);
   });
-  it('Tenta atualizar registro que não existe', async () => {
+  it('Trying to update a record that doesnt exist', async () => {
 
     const res1 = await testServer
-      .put('/cidades/99999')
+      .put('/cities/99999')
       .set({ Authorization: `Bearer ${accessToken}` })
-      .send({ nome: 'Caxias' });
+      .send({ name: 'Caxias' });
 
     expect(res1.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
     expect(res1.body).toHaveProperty('errors.default');

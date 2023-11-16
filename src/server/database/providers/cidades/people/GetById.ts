@@ -1,11 +1,11 @@
-import { ETableNames } from '../../ETableNames';
-import { ICities } from '../../models';
-import { Knex } from '../../knex';
+import { ETableNames } from "../../../ETableNames";
+import { Knex } from "../../../knex";
+import { IPeople } from "../../../models";
 
 
-export const getById = async (id: number): Promise<ICities | Error> => {
+export const getById = async (id: number): Promise<IPeople | Error> => {
   try {
-    const result = await Knex(ETableNames.city)
+    const result = await Knex(ETableNames.person)
       .select('*')
       .where('id', '=', id)
       .first();

@@ -3,7 +3,7 @@ import { Knex } from './server/database/knex';
 
 const startServer = () => {
   server.listen(process.env.PORT || 3333, () => {
-    console.log(`App rodando na porta ${process.env.PORT || 3333}`)
+    console.log(`App running on the door ${process.env.PORT || 3333}`)
   });
 
 }
