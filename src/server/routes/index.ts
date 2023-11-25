@@ -13,11 +13,11 @@ router.get('/', (_, res) => {
   return res.send('Olá, DEV!');
 });
 
-router.get('/Cities', ensureAuthenticated, CitiesController.getAllValidation, CitiesController.getAll);
-router.post('/Cities', ensureAuthenticated, CitiesController.createValidation, CitiesController.create);
-router.get('/Cities/:id', ensureAuthenticated, CitiesController.getByIdValidation, CitiesController.getById);
-router.put('/Cities/:id', ensureAuthenticated, CitiesController.updateByIdValidation, CitiesController.updateById);
-router.delete('/Cities/:id', ensureAuthenticated, CitiesController.deleteByIdValidation, CitiesController.deleteById);
+router.get('/cities', ensureAuthenticated, CitiesController.getAllValidation, CitiesController.getAll);
+router.post('/cities', ensureAuthenticated, CitiesController.createValidation, CitiesController.create);
+router.get('/cities/:id', ensureAuthenticated, CitiesController.getByIdValidation, CitiesController.getById);
+router.put('/cities/:id', ensureAuthenticated, CitiesController.updateByIdValidation, CitiesController.updateById);
+router.delete('/cities/:id', ensureAuthenticated, CitiesController.deleteByIdValidation, CitiesController.deleteById);
 
 router.get('/people', ensureAuthenticated, PeopleController.getAllValidation, PeopleController.getAll);
 router.post('/people', ensureAuthenticated, PeopleController.createValidation, PeopleController.create);
